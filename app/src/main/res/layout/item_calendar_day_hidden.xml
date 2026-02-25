@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    >
+    <TextView
+        android:id="@+id/dayTextHidden"
+        android:textSize="22sp"
+        android:textColor="@color/black"
+        android:layout_height="25dp"
+        android:layout_width="40dp"
+        android:gravity="center"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/lunarTextHidden"
+        android:textSize="10sp"
+        android:textColor="@color/gray"
+        android:layout_height="15dp"
+        android:layout_width="40dp"
+        android:gravity="center"
+        android:textStyle="bold" />
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="24dp"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:layout_marginTop="4dp"-->
+<!--        android:gravity="center">-->
+
+<!--        <com.makeramen.roundedimageview.RoundedImageView-->
+<!--            android:id="@+id/userAIcon"-->
+<!--            android:layout_width="16dp"-->
+<!--            android:layout_height="16dp"-->
+<!--            android:layout_marginEnd="4dp"-->
+<!--            rad-->
+<!--             />-->
+
+<!--        <com.makeramen.roundedimageview.RoundedImageView-->
+<!--            android:id="@+id/userBIcon"-->
+<!--            android:layout_width="16dp"-->
+<!--            android:layout_height="16dp"-->
+<!--             />-->
+<!--    </LinearLayout>-->
+</LinearLayout>

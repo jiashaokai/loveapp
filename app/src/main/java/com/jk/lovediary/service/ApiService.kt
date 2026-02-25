@@ -1,0 +1,39 @@
+package com.jk.lovediary.service
+
+import com.jk.lovediary.model.RecordVO
+import com.jk.lovediary.model.param.LoginParam
+import com.jk.lovediary.model.response.HttpResponse
+import com.jk.lovediary.model.param.UserCreateParam
+import retrofit2.Call
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
+
+interface ApiService {
+
+    @GET("/jk/auth")
+    fun getUserName(): Call<HttpResponse<String>>
+
+    @POST("/jk/auth/register")
+    fun register(@Body param: UserCreateParam): Call<HttpResponse<Boolean>>
+
+    @POST("/jk/auth/login")
+    fun login(@Body param: LoginParam): Call<HttpResponse<String>>
+
+    @PUT("/jk/auth/related/{phoneNum}")
+    fun relatedUser(@Path("phoneNum") phoneNum: String): Call<HttpResponse<Boolean>>
+
+    @POST("/jk/record/{time}")
+    fun check(@Path("time") time: String): Call<HttpResponse<Boolean>>
+
+    @POST("/jk/record/{time}/delete")
+    fun delete(@Path("time") time: String): Call<HttpResponse<Boolean>>
+
+
+    @GET("/jk/record/{time}")
+    suspend fun getByRecord(@Path("time") time: String): HttpResponse<List<RecordVO>>
+}
