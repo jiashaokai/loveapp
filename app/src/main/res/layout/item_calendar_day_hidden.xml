@@ -4,22 +4,26 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="8dp"
+    android:id="@+id/dayOverall"
+    android:background="@drawable/no_check"
     >
     <TextView
         android:id="@+id/dayTextHidden"
         android:textSize="22sp"
         android:textColor="@color/black"
         android:layout_height="25dp"
-        android:layout_width="40dp"
+        android:layout_width="match_parent"
         android:gravity="center"
+        android:layout_gravity="center"
         android:textStyle="bold" />
     <TextView
         android:id="@+id/lunarTextHidden"
         android:textSize="10sp"
         android:textColor="@color/gray"
         android:layout_height="15dp"
-        android:layout_width="40dp"
+        android:layout_width="match_parent"
         android:gravity="center"
+        android:layout_gravity="center"
         android:textStyle="bold" />
 
 <!--    <LinearLayout-->

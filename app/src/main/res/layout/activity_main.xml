@@ -79,7 +79,7 @@
             android:text="日"
             android:gravity="center"
             android:textStyle="bold"
-            android:textSize="30sp"
+            android:textSize="24sp"
             android:textColor="#FF0000" />
 
         <TextView
@@ -87,7 +87,7 @@
             android:layout_height="36dp"
             android:layout_weight="1"
             android:text="一"
-            android:textSize="30sp"
+            android:textSize="24sp"
             android:gravity="center"
             android:textStyle="bold" />
 
@@ -96,7 +96,7 @@
             android:layout_height="36dp"
             android:layout_weight="1"
             android:text="二"
-            android:textSize="30sp"
+            android:textSize="24sp"
             android:gravity="center"
             android:textStyle="bold" />
 
@@ -105,7 +105,7 @@
             android:layout_height="36dp"
             android:layout_weight="1"
             android:text="三"
-            android:textSize="30sp"
+            android:textSize="24sp"
             android:gravity="center"
             android:textStyle="bold" />
 
@@ -114,7 +114,7 @@
             android:layout_height="36dp"
             android:layout_weight="1"
             android:text="四"
-            android:textSize="30sp"
+            android:textSize="24sp"
             android:gravity="center"
             android:textStyle="bold" />
 
@@ -123,7 +123,7 @@
             android:layout_height="36dp"
             android:layout_weight="1"
             android:text="五"
-            android:textSize="30sp"
+            android:textSize="24sp"
             android:gravity="center"
             android:textStyle="bold" />
 
@@ -132,35 +132,104 @@
             android:layout_height="36dp"
             android:layout_weight="1"
             android:text="六"
-            android:textSize="30sp"
+            android:textSize="24sp"
             android:gravity="center"
             android:textStyle="bold"
             android:textColor="#2196F3" />
     </LinearLayout>
 
-    <!-- 日历主体 -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/calendarRecyclerView"
+<!--    &lt;!&ndash; 日历主体 &ndash;&gt;-->
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/calendarRecyclerView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        />-->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/calendarViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="330dp"
+        android:layout_marginTop="8dp"/>
+    <!-- 统计模块开始 -->
+    <LinearLayout
+        android:id="@+id/statContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        />
+        android:orientation="vertical"
+        android:layout_marginTop="12dp"
+        android:padding="12dp">
 
-    <LinearLayout android:id="@+id/dayDetail"
-        android:layout_width="match_parent"
-        android:layout_height="42dp"
-        android:orientation="horizontal"
-        android:weightSum="7">
-
-        <TextView
-            android:id="@+id/dakaCount"
-            android:layout_width="wrap_content"
+        <!-- 本月统计 -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:textSize="30sp"/>
+            android:orientation="vertical"
+            android:background="@drawable/bg_stat_card"
+            android:padding="12dp">
+
+            <TextView
+                android:text="📅 本月统计"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_height="20sp"
+                android:layout_width="wrap_content"/>
+
+            <TextView
+                android:id="@+id/myMonthText"
+                android:layout_height="20sp"
+                android:layout_width="wrap_content"/>
+
+            <TextView
+                android:id="@+id/relatedMonthText"
+                android:layout_height="20sp"
+                android:layout_width="wrap_content"/>
+
+            <TextView
+                android:id="@+id/togetherMonthText"
+                android:layout_height="20sp"
+                android:layout_width="wrap_content"/>
+        </LinearLayout>
+
+
+        <!-- 本年度统计 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_stat_card"
+            android:padding="12dp">
+
+            <TextView
+                android:text="📆 本年度统计"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_height="20sp"
+                android:layout_width="wrap_content"/>
+
+            <TextView
+                android:id="@+id/myYearText"
+                android:layout_height="20sp"
+                android:layout_width="wrap_content"/>
+
+            <TextView
+                android:id="@+id/relatedYearText"
+                android:layout_height="20sp"
+                android:layout_width="wrap_content"/>
+
+            <TextView
+                android:id="@+id/togetherYearText"
+                android:layout_height="20sp"
+                android:layout_width="wrap_content"/>
+        </LinearLayout>
+
     </LinearLayout>
+
+    <!-- 月度趋势列表 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/monthStatRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"/>
 
 </LinearLayout>

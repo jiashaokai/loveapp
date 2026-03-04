@@ -1,7 +1,8 @@
 package com.jk.lovediary
 
 //import com.jk.lovediary.ui.theme.CalendarAdapter
-import com.jk.lovediary.adapter.MyAdapter
+import CalendarPagerAdapter
+import MonthStatAdapter
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -12,14 +13,20 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.jk.lovediary.activity.LoginActivity
 import com.jk.lovediary.activity.YearActivity
+
+
+import com.jk.lovediary.adapter.MyAdapter
 import com.jk.lovediary.data.CheckInStore
 import com.jk.lovediary.model.CalendarDay
-import com.jk.lovediary.model.RecordVO
 import com.jk.lovediary.model.response.HttpResponse
 import com.jk.lovediary.utils.RetrofitClient
 import com.jk.lovediary.utils.generateCalendarDays
@@ -28,16 +35,12 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.time.LocalDate
+import java.time.YearMonth
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 
-class MainActivity : ComponentActivity() {
-    private lateinit var adapter: MyAdapter
-    private lateinit var store: CheckInStore
-    private lateinit var recyclerView: RecyclerView
-
-    private var initialY = 0f
-
+class MainActivity : FragmentActivity() {
     //登录
     private var loginUserName: String? = null
 
@@ -49,68 +52,6 @@ class MainActivity : ComponentActivity() {
         //初始化请求
         RetrofitClient.init(applicationContext)
 
-        store = CheckInStore(this)
-
-        adapter = MyAdapter { day -> showCheckInDialog(day) }
-
-        recyclerView = findViewById<RecyclerView>(R.id.calendarRecyclerView).apply {
-            layoutManager = GridLayoutManager(this@MainActivity, 7)
-            adapter = this@MainActivity.adapter
-        }
-
-
-        val currentDate = LocalDate.now() // 获取当前日期
-        val formatter = DateTimeFormatter.ofPattern("yyyy/M") // 定义格式
-        val formattedDate = currentDate.format(formatter) // 格式化当前日期
-
-        val yearAndMouthText = findViewById<TextView>(R.id.yearAndMouthText).apply {
-            text = formattedDate;
-        }
-        yearAndMouthText.setOnClickListener {
-            val intent = Intent(this, YearActivity::class.java)
-            startActivity(intent)
-        }
-
-
-        val days = generateCalendarDays(currentDate.year, currentDate.monthValue)
-        lifecycleScope.launch {
-
-            days.forEach { day ->
-                day.userAChecked = false
-                day.userBChecked = false
-            }
-
-            val formatter = DateTimeFormatter.ofPattern("yyyy-MM") // 定义格式
-
-            val time = currentDate.format(formatter) // 格式化当前日期
-            try {
-                val response = RetrofitClient.instance.getByRecord(time);
-
-                val recordList = response.data
-
-                val recordMap = recordList.associateBy { LocalDate.parse(it.time) }  // 注意 time 格式是 yyyy-MM-dd
-
-                days.forEach { day ->
-                    val record = recordMap[day.date]
-                    if (record != null) {
-                        day.userAChecked = record.relatedUserStatus
-                        day.userBChecked = record.myStatus
-                    }else{
-                        day.userAChecked = false
-                        day.userBChecked = false
-                    }
-                }
-            }catch (e: Exception) {
-                Log.e("网络异常", e.toString())
-                // 这里防止崩溃
-            }
-
-            adapter.submitList(days)
-            updateCheckInCounts()
-        }
-
-
-
         // 恢复登录状态
         val unloginIcon = findViewById<ImageView>(R.id.unlogin)
         unloginIcon.visibility = View.VISIBLE
@@ -121,88 +62,114 @@ class MainActivity : ComponentActivity() {
 
         getUserName()
 
+        val viewPager = findViewById<ViewPager2>(R.id.calendarViewPager)
 
+        viewPager.adapter = CalendarPagerAdapter(this)
 
-    }
+        // 默认跳到当前月
+        val startYearMonth = YearMonth.of(2020, 1)
+        val currentYearMonth = YearMonth.now()
 
-    private fun showCheckInDialog(day: CalendarDay) {
-        val options = arrayOf("打卡", "清除当天签到数据")
-        AlertDialog.Builder(this)
-            .setTitle("选择打卡用户")
-            .setItems(options) { _, which ->
-                when (which) {
-                    0 -> {
+        findViewById<TextView>(R.id.yearAndMouthText).text =
+            "${currentYearMonth.year}-${currentYearMonth.monthValue}"
 
-                        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd") // 定义格式
-                        val formattedDate = day.date.format(formatter) // 格式化当前日期
+        val position = ChronoUnit.MONTHS
+            .between(startYearMonth, currentYearMonth)
+            .toInt()
 
-                        check(formattedDate, day)
-                    }
-                    1 -> {
+        viewPager.setCurrentItem(position, false)
+        viewPager.registerOnPageChangeCallback(
+            object : ViewPager2.OnPageChangeCallback() {
 
-                        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd") // 定义格式
-                        val formattedDate = day.date.format(formatter) // 格式化当前日期
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
 
-                        deleteRecord(formattedDate, day)
-                    }
+                    val yearMonth = startYearMonth.plusMonths(position.toLong())
+
+                    // 更新标题
+                    findViewById<TextView>(R.id.yearAndMouthText).text =
+                        "${yearMonth.year}-${yearMonth.monthValue}"
+
+//                    // 根据月份刷新统计
+//                    updateCheckInCountsByMonth(yearMonth)
                 }
             }
-            .show()
+        )
+
+
+        updateCheckInCounts()
     }
 
-    private fun showRecyclerViewForDownwardSwipe() {
-        // 向下滑动时显示不同的 RecyclerView 内容
-        adapter?.toggleHidden()
-        recyclerView?.smoothScrollToPosition(0)  // 可选的平滑滚动
-    }
+    private fun updateCheckInCountsByMonth(yearMonth: YearMonth) {
 
-    private fun showRecyclerViewForUpwardSwipe() {
-        // 向上滑动时显示不同的 RecyclerView 内容
-        adapter?.toggleHidden()
-        recyclerView?.smoothScrollToPosition(0)  // 可选的平滑滚动
-    }
+        lifecycleScope.launch {
+            try {
 
-    // 重写 dispatchTouchEvent 来监听所有触摸事件
-    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        when (event.action) {
-            MotionEvent.ACTION_DOWN -> {
-                // 记录触摸的初始Y坐标
-                initialY = event.rawY
-            }
+                val ym = yearMonth.toString() // 2025-03
 
+                val response = RetrofitClient.instance.getCount()
 
-            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                val deltaY = event.rawY
-                if (deltaY > initialY){
-                    showRecyclerViewForUpwardSwipe()
-                }else if (deltaY < initialY){
-                    showRecyclerViewForDownwardSwipe()
-                }
+                val vo = response.data
+
+                findViewById<TextView>(R.id.myMonthText).text =
+                    "👨 本月打卡  ${vo.myMonthTotal} 天"
+
+                findViewById<TextView>(R.id.relatedMonthText).text =
+                    "👩 本月打卡  ${vo.relatedMonthTotal} 天"
+
+                findViewById<TextView>(R.id.togetherMonthText).text =
+                    "💕 本月共同  ${vo.togetherMonthTotal} 天"
+
+            } catch (e: Exception) {
+                Log.e("月份刷新异常", e.toString())
             }
         }
-        return super.dispatchTouchEvent(event)  // 继续传递事件给其他组件
     }
 
     private fun updateCheckInCounts() {
         lifecycleScope.launch {
-            val days = adapter.days // 获取当前显示的日历天数
-            var userACount = 0
-            var userBCount = 0
-            days.forEach { day ->
-                if (day.userAChecked) userACount++
-                if (day.userBChecked) userBCount++
-            }
+            try {
 
-            val part1 = "运动： "
-            val part2 = "贾坤 "
-            val part3 = "莹莹 "
-            val part4 = "次 "
-            findViewById<TextView>(R.id.dakaCount).apply {
-                val stringBuilder = StringBuilder()
-                stringBuilder.append(part1)
-                stringBuilder.append(part3).append(userACount).append(part4)
-                stringBuilder.append(part2).append(userBCount).append(part4)
-                text = stringBuilder.toString()
+                val response = RetrofitClient.instance.getCount();
+
+                val vo = response.data
+
+                // ===== 本月 =====
+                val myMonth = vo.myMonthTotal
+                val relatedMonth = vo.relatedMonthTotal
+                val togetherMonth = vo.togetherMonthTotal
+
+                findViewById<TextView>(R.id.myMonthText).text =
+                    "本人本月打卡  $myMonth 天"
+
+                findViewById<TextView>(R.id.relatedMonthText).text =
+                    "对方本月打卡  $relatedMonth 天"
+
+                findViewById<TextView>(R.id.togetherMonthText).text =
+                    "💕 本月共同  $togetherMonth 天"
+
+
+                // ===== 本年度 =====
+                val myYear = vo.myYearTotal
+                val relatedYear = vo.relatedYearTotal
+                val togetherYear = vo.togetherYearTotal
+
+                findViewById<TextView>(R.id.myYearText).text =
+                    "本人年度打卡  $myYear 天"
+
+                findViewById<TextView>(R.id.relatedYearText).text =
+                    "对方年度打卡  $relatedYear 天"
+
+                findViewById<TextView>(R.id.togetherYearText).text =
+                    "💕 年度共同  $togetherYear 天"
+
+
+                var monthStatRecyclerView = findViewById<RecyclerView>(R.id.monthStatRecyclerView)
+                monthStatRecyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
+                monthStatRecyclerView.adapter = MonthStatAdapter(vo.monthStats)
+            } catch (e: Exception) {
+                Log.e("网络异常", e.toString())
+                // 这里防止崩溃
             }
         }
     }
@@ -217,7 +184,10 @@ class MainActivity : ComponentActivity() {
 
         val call = RetrofitClient.instance.getUserName()
         call.enqueue(object : Callback<HttpResponse<String>> {
-            override fun onResponse(call: Call<HttpResponse<String>>, response: Response<HttpResponse<String>>) {
+            override fun onResponse(
+                call: Call<HttpResponse<String>>,
+                response: Response<HttpResponse<String>>
+            ) {
                 if (response.isSuccessful) {
                     val result = response.body()
                     if (result?.code == 200) {
@@ -225,56 +195,17 @@ class MainActivity : ComponentActivity() {
                         updateUser()
                     }
                 } else {
-                    Toast.makeText(this@MainActivity, "请求失败: ${response.code()}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@MainActivity,
+                        "请求失败: ${response.code()}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
             override fun onFailure(call: Call<HttpResponse<String>>, t: Throwable) {
-                Toast.makeText(this@MainActivity, "请求失败: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
-    }
-
-    fun check(time: String,day: CalendarDay) {
-
-        val call = RetrofitClient.instance.check(time);
-        call.enqueue(object : Callback<HttpResponse<Boolean>> {
-            override fun onResponse(call: Call<HttpResponse<Boolean>>, response: Response<HttpResponse<Boolean>>) {
-                if (response.isSuccessful) {
-                    day.userBChecked = true
-                    store.setCheckInStatus(day.date, "A", true)
-
-                    adapter.notifyDataSetChanged()
-                    updateCheckInCounts()
-                } else {
-                    Toast.makeText(this@MainActivity, "请求服务器失败: ${response.code()}", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onFailure(call: Call<HttpResponse<Boolean>>, t: Throwable) {
-                Toast.makeText(this@MainActivity, "请求服务器失败: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
-    }
-
-    fun deleteRecord(time: String,day: CalendarDay) {
-
-        val call = RetrofitClient.instance.delete(time);
-        call.enqueue(object : Callback<HttpResponse<Boolean>> {
-            override fun onResponse(call: Call<HttpResponse<Boolean>>, response: Response<HttpResponse<Boolean>>) {
-                if (response.isSuccessful) {
-                    day.userBChecked = false
-                    store.clearCheckInStatus(day.date, "A")
-
-                    adapter.notifyDataSetChanged()
-                    updateCheckInCounts()
-                } else {
-                    Toast.makeText(this@MainActivity, "请求服务器失败: ${response.code()}", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onFailure(call: Call<HttpResponse<Boolean>>, t: Throwable) {
-                Toast.makeText(this@MainActivity, "请求服务器失败: ${t.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "请求失败: ${t.message}", Toast.LENGTH_SHORT)
+                    .show()
             }
         })
     }
@@ -284,7 +215,7 @@ class MainActivity : ComponentActivity() {
 
             val welcomeText = findViewById<TextView>(R.id.welcome)
 
-            welcomeText.text = "欢迎，$loginUserName"
+            welcomeText.text = "$loginUserName"
             welcomeText.visibility = View.VISIBLE
 
             val unloginIcon = findViewById<ImageView>(R.id.unlogin)

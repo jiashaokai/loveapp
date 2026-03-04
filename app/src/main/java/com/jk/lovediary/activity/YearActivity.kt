@@ -1,15 +1,19 @@
 package com.jk.lovediary.activity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.GridLayout
 import android.widget.TextView
 import androidx.activity.ComponentActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jk.lovediary.R
 import com.jk.lovediary.adapter.YearAdapter
+import com.jk.lovediary.utils.RetrofitClient
 import com.jk.lovediary.utils.generateYearCalendarDays
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -22,6 +26,9 @@ class YearActivity : ComponentActivity() {
 
         val gridLayout = findViewById<GridLayout>(R.id.monthGrid)
         val currentDate = LocalDate.now() // 获取当前日期
+
+        val formatterTest = DateTimeFormatter.ofPattern("yyyy-MM") // 定义格式
+
 
         for (i in 1..12) {
             val itemView = LayoutInflater.from(this).inflate(R.layout.item_month, gridLayout, false)
@@ -42,12 +49,39 @@ class YearActivity : ComponentActivity() {
 
 
             val days = generateYearCalendarDays(currentDate.year, i)
-            days.forEach { day ->
+            lifecycleScope.launch {
+                days.forEach { day ->
 
-                day.userAChecked = false
-                day.userBChecked = false
+                    day.userAChecked = false
+                    day.userBChecked = false
+                }
+
+                val time = currentDate.format(formatterTest) // 格式化当前日期
+                try {
+                    val response = RetrofitClient.instance.getByRecord(time);
+
+                    val recordList = response.data
+
+                    val recordMap = recordList.associateBy { LocalDate.parse(it.time) }  // 注意 time 格式是 yyyy-MM-dd
+
+                    days.forEach { day ->
+                        val record = recordMap[day.date]
+                        if (record != null) {
+                            day.userAChecked = record.relatedUserStatus
+                            day.userBChecked = record.myStatus
+                        }else{
+                            day.userAChecked = false
+                            day.userBChecked = false
+                        }
+                    }
+                }catch (e: Exception) {
+                    Log.e("网络异常", e.toString())
+                    // 这里防止崩溃
+                }
+
+                adapter.submitList(days)
             }
-            adapter.submitList(days)
+
 
             val index = i - 1
 

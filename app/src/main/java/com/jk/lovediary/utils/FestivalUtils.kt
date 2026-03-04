@@ -110,7 +110,7 @@ class FestivalUtils {
 
         // 检查农历节日
         lunar.festivals?.let { if (it.isNotEmpty()) return it.joinToString("、") }
-        lunar.otherFestivals?.let { if (it.isNotEmpty()) return it.joinToString("、") }
+//        lunar.otherFestivals?.let { if (it.isNotEmpty()) return it.joinToString("、") }
         lunar.jieQi?.let { if (it.isNotEmpty()) return it }
 
         // 检查浮动节日

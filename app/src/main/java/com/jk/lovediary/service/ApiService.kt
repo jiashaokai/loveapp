@@ -1,6 +1,7 @@
 package com.jk.lovediary.service
 
 import com.jk.lovediary.model.RecordVO
+import com.jk.lovediary.model.YearStatVO
 import com.jk.lovediary.model.param.LoginParam
 import com.jk.lovediary.model.response.HttpResponse
 import com.jk.lovediary.model.param.UserCreateParam
@@ -36,4 +37,7 @@ interface ApiService {
 
     @GET("/jk/record/{time}")
     suspend fun getByRecord(@Path("time") time: String): HttpResponse<List<RecordVO>>
+
+    @GET("/jk/record/count")
+    suspend fun getCount(): HttpResponse<YearStatVO>
 }
