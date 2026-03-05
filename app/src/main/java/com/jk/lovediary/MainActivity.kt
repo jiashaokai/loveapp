@@ -100,31 +100,31 @@ class MainActivity : FragmentActivity() {
         updateCheckInCounts()
     }
 
-    private fun updateCheckInCountsByMonth(yearMonth: YearMonth) {
-
-        lifecycleScope.launch {
-            try {
-
-                val ym = yearMonth.toString() // 2025-03
-
-                val response = RetrofitClient.instance.getCount()
-
-                val vo = response.data
-
-                findViewById<TextView>(R.id.myMonthText).text =
-                    "👨 本月打卡  ${vo.myMonthTotal} 天"
-
-                findViewById<TextView>(R.id.relatedMonthText).text =
-                    "👩 本月打卡  ${vo.relatedMonthTotal} 天"
-
-                findViewById<TextView>(R.id.togetherMonthText).text =
-                    "💕 本月共同  ${vo.togetherMonthTotal} 天"
-
-            } catch (e: Exception) {
-                Log.e("月份刷新异常", e.toString())
-            }
-        }
-    }
+//    private fun updateCheckInCountsByMonth(yearMonth: YearMonth) {
+//
+//        lifecycleScope.launch {
+//            try {
+//
+//                val ym = yearMonth.toString() // 2025-03
+//
+//                val response = RetrofitClient.instance.getCount()
+//
+//                val vo = response.data
+//
+//                findViewById<TextView>(R.id.myMonthText).text =
+//                    "👨 本月打卡  ${vo.myMonthTotal} 天"
+//
+//                findViewById<TextView>(R.id.relatedMonthText).text =
+//                    "👩 本月打卡  ${vo.relatedMonthTotal} 天"
+//
+//                findViewById<TextView>(R.id.togetherMonthText).text =
+//                    "💕 本月共同  ${vo.togetherMonthTotal} 天"
+//
+//            } catch (e: Exception) {
+//                Log.e("月份刷新异常", e.toString())
+//            }
+//        }
+//    }
 
     private fun updateCheckInCounts() {
         lifecycleScope.launch {
@@ -134,19 +134,19 @@ class MainActivity : FragmentActivity() {
 
                 val vo = response.data
 
-                // ===== 本月 =====
-                val myMonth = vo.myMonthTotal
-                val relatedMonth = vo.relatedMonthTotal
-                val togetherMonth = vo.togetherMonthTotal
-
-                findViewById<TextView>(R.id.myMonthText).text =
-                    "本人本月打卡  $myMonth 天"
-
-                findViewById<TextView>(R.id.relatedMonthText).text =
-                    "对方本月打卡  $relatedMonth 天"
-
-                findViewById<TextView>(R.id.togetherMonthText).text =
-                    "💕 本月共同  $togetherMonth 天"
+//                // ===== 本月 =====
+//                val myMonth = vo.myMonthTotal
+//                val relatedMonth = vo.relatedMonthTotal
+//                val togetherMonth = vo.togetherMonthTotal
+//
+//                findViewById<TextView>(R.id.myMonthText).text =
+//                    "本人本月打卡  $myMonth 天"
+//
+//                findViewById<TextView>(R.id.relatedMonthText).text =
+//                    "对方本月打卡  $relatedMonth 天"
+//
+//                findViewById<TextView>(R.id.togetherMonthText).text =
+//                    "💕 本月共同  $togetherMonth 天"
 
 
                 // ===== 本年度 =====
@@ -164,9 +164,9 @@ class MainActivity : FragmentActivity() {
                     "💕 年度共同  $togetherYear 天"
 
 
-                var monthStatRecyclerView = findViewById<RecyclerView>(R.id.monthStatRecyclerView)
-                monthStatRecyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
-                monthStatRecyclerView.adapter = MonthStatAdapter(vo.monthStats)
+//                var monthStatRecyclerView = findViewById<RecyclerView>(R.id.monthStatRecyclerView)
+//                monthStatRecyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
+//                monthStatRecyclerView.adapter = MonthStatAdapter(vo.monthStats)
             } catch (e: Exception) {
                 Log.e("网络异常", e.toString())
                 // 这里防止崩溃

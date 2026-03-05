@@ -14,7 +14,8 @@ import com.nlf.calendar.Solar
 import java.time.LocalDate
 
 class MyAdapter (
-    private val onDayClick: (CalendarDay) -> Unit
+    private val onDayClick: (CalendarDay) -> Unit,
+    private val onDayLongClick: (CalendarDay) -> Unit   // 新增长按
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
@@ -32,7 +33,7 @@ class MyAdapter (
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_day_hidden, parent, false)
-        return  HiddenViewHolder(view,onDayClick,current)
+        return  HiddenViewHolder(view,onDayClick,onDayLongClick,current)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -49,6 +50,7 @@ class MyAdapter (
     class HiddenViewHolder(
         view: View,
         private val onDayClick: (CalendarDay) -> Unit,
+        private val onDayLongClick: (CalendarDay) -> Unit,
         private val current: Int
     ) : RecyclerView.ViewHolder(view){
         private val dayText = view.findViewById<TextView>(R.id.dayTextHidden)
@@ -143,6 +145,11 @@ class MyAdapter (
 
                 itemView.setOnClickListener {
                     onDayClick(day)
+                }
+
+                itemView.setOnLongClickListener {
+                    onDayLongClick(day)
+                    true
                 }
             }else{
                 dayText.text = ""

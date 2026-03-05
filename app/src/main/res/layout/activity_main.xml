@@ -160,35 +160,35 @@
         android:padding="12dp">
 
         <!-- 本月统计 -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/bg_stat_card"
-            android:padding="12dp">
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical"-->
+<!--            android:background="@drawable/bg_stat_card"-->
+<!--            android:padding="12dp">-->
 
-            <TextView
-                android:text="📅 本月统计"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:layout_height="20sp"
-                android:layout_width="wrap_content"/>
+<!--            <TextView-->
+<!--                android:text="📅 本月统计"-->
+<!--                android:textStyle="bold"-->
+<!--                android:textSize="18sp"-->
+<!--                android:layout_height="20sp"-->
+<!--                android:layout_width="wrap_content"/>-->
 
-            <TextView
-                android:id="@+id/myMonthText"
-                android:layout_height="20sp"
-                android:layout_width="wrap_content"/>
+<!--            <TextView-->
+<!--                android:id="@+id/myMonthText"-->
+<!--                android:layout_height="20sp"-->
+<!--                android:layout_width="wrap_content"/>-->
 
-            <TextView
-                android:id="@+id/relatedMonthText"
-                android:layout_height="20sp"
-                android:layout_width="wrap_content"/>
+<!--            <TextView-->
+<!--                android:id="@+id/relatedMonthText"-->
+<!--                android:layout_height="20sp"-->
+<!--                android:layout_width="wrap_content"/>-->
 
-            <TextView
-                android:id="@+id/togetherMonthText"
-                android:layout_height="20sp"
-                android:layout_width="wrap_content"/>
-        </LinearLayout>
+<!--            <TextView-->
+<!--                android:id="@+id/togetherMonthText"-->
+<!--                android:layout_height="20sp"-->
+<!--                android:layout_width="wrap_content"/>-->
+<!--        </LinearLayout>-->
 
 
         <!-- 本年度统计 -->
@@ -225,11 +225,11 @@
 
     </LinearLayout>
 
-    <!-- 月度趋势列表 -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/monthStatRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"/>
+<!--    &lt;!&ndash; 月度趋势列表 &ndash;&gt;-->
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/monthStatRecyclerView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="10dp"/>-->
 
 </LinearLayout>

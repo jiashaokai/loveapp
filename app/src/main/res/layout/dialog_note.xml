@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@drawable/dialog_bg">
+
+    <TextView
+        android:id="@+id/dialogDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="2026-03-05"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="#444"
+        android:layout_marginBottom="10dp"/>
+
+    <EditText
+        android:id="@+id/noteEdit"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:hint="记录今天发生的事情..."
+        android:gravity="top"
+        android:padding="12dp"
+        android:textSize="16sp"
+        android:background="@drawable/edit_bg"
+        android:inputType="textMultiLine"/>
+
+</LinearLayout>

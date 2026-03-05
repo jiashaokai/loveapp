@@ -3,6 +3,7 @@ package com.jk.lovediary.service
 import com.jk.lovediary.model.RecordVO
 import com.jk.lovediary.model.YearStatVO
 import com.jk.lovediary.model.param.LoginParam
+import com.jk.lovediary.model.param.NoteParam
 import com.jk.lovediary.model.response.HttpResponse
 import com.jk.lovediary.model.param.UserCreateParam
 import retrofit2.Call
@@ -40,4 +41,7 @@ interface ApiService {
 
     @GET("/jk/record/count")
     suspend fun getCount(): HttpResponse<YearStatVO>
+
+    @POST("/jk/record/note")
+    fun saveNote(@Body param: NoteParam): Call<HttpResponse<Boolean>>
 }

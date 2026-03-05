@@ -1,11 +1,14 @@
 package com.jk.lovediary.fragment
 
 import android.app.AlertDialog
+import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -15,6 +18,7 @@ import com.jk.lovediary.R
 import com.jk.lovediary.adapter.MyAdapter
 import com.jk.lovediary.data.CheckInStore
 import com.jk.lovediary.model.CalendarDay
+import com.jk.lovediary.model.param.NoteParam
 import com.jk.lovediary.model.response.HttpResponse
 import com.jk.lovediary.utils.RetrofitClient
 import com.jk.lovediary.utils.generateCalendarDays
@@ -50,7 +54,14 @@ class MonthFragment : Fragment()  {
 
         store = CheckInStore(requireContext())
 
-        adapter = MyAdapter { day -> showCheckInDialog(day) }
+        adapter = MyAdapter (
+            onDayClick = { day ->
+                showCheckInDialog(day)
+            },
+            onDayLongClick = { day ->
+                showNoteDialog(day)
+            }
+        )
 
 
         val view = inflater.inflate(R.layout.fragment_month, container, false)
@@ -104,8 +115,59 @@ class MonthFragment : Fragment()  {
         return view
     }
 
+    private fun showNoteDialog(day: CalendarDay) {
+
+        val view = layoutInflater.inflate(R.layout.dialog_note, null)
+
+        val editText = view.findViewById<EditText>(R.id.noteEdit)
+        val dateText = view.findViewById<TextView>(R.id.dialogDate)
+
+        dateText.text = day.date.toString()
+
+        AlertDialog.Builder(requireContext())
+            .setView(view)
+            .setPositiveButton("记录") { _, _ ->
+                val text = editText.text.toString()
+                saveNote(text, day)
+            }
+            .setNeutralButton("取消打卡"){ _, _ ->
+                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd") // 定义格式
+                val formattedDate = day.date.format(formatter) // 格式化当前日期
+
+                deleteRecord(formattedDate,day)
+            }
+            .setNegativeButton("打卡"){ _, _ ->
+                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd") // 定义格式
+                val formattedDate = day.date.format(formatter) // 格式化当前日期
+
+                check(formattedDate, day)
+            }
+            .show()
+    }
+
+    fun saveNote(note: String, day: CalendarDay) {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd") // 定义格式
+        val formattedDate = day.date.format(formatter) // 格式化当前日期
+
+        val NoteParam = NoteParam(formattedDate,note)
+        val call = RetrofitClient.instance.saveNote(NoteParam);
+        call.enqueue(object : Callback<HttpResponse<Boolean>> {
+            override fun onResponse(call: Call<HttpResponse<Boolean>>, response: Response<HttpResponse<Boolean>>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(requireContext(), "请求服务器成功: ${response.code()}", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), "请求服务器失败: ${response.code()}", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<HttpResponse<Boolean>>, t: Throwable) {
+                Toast.makeText(requireContext(), "请求服务器失败: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
     private fun showCheckInDialog(day: CalendarDay) {
-        val options = arrayOf("打卡", "清除当天签到数据")
+        val options = arrayOf("打卡", "取消打卡")
         AlertDialog.Builder(requireContext())
             .setTitle("选择")
             .setItems(options) { _, which ->
