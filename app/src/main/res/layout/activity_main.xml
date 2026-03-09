@@ -1,235 +1,252 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.widget.ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="8dp"
-    android:id="@+id/test">
+    android:layout_height="match_parent">
 
-    <!-- 星期头部 -->
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="7">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_weight="1"
-
-            android:gravity="center"
-            android:textStyle="bold"
-            android:textColor="#FF0000" />
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="42dp"
-        android:orientation="horizontal"
-        android:weightSum="7">
-
-        <!-- 登录后显示 -->
-        <TextView
-            android:id="@+id/welcome"
-            android:layout_width="wrap_content"
-            android:layout_height="42dp"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:layout_alignParentEnd="true"
-            android:visibility="gone" />
-
-        <!-- 未登录时显示 -->
-        <ImageView
-            android:id="@+id/unlogin"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/unlogin"
-            android:visibility="gone" />
-    </RelativeLayout>
-    <RelativeLayout android:id="@+id/mouthHeader"
-        android:layout_width="match_parent"
-        android:layout_height="42dp"
-        android:orientation="horizontal"
-        android:weightSum="7">
-
-        <TextView
-            android:id="@+id/yearAndMouthText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:layout_alignParentStart="true"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"/>
-    </RelativeLayout>
-    <LinearLayout
-        android:id="@+id/weekHeader"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="7">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="36dp"
-            android:layout_weight="1"
-            android:text="日"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:textSize="24sp"
-            android:textColor="#FF0000" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="36dp"
-            android:layout_weight="1"
-            android:text="一"
-            android:textSize="24sp"
-            android:gravity="center"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="36dp"
-            android:layout_weight="1"
-            android:text="二"
-            android:textSize="24sp"
-            android:gravity="center"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="36dp"
-            android:layout_weight="1"
-            android:text="三"
-            android:textSize="24sp"
-            android:gravity="center"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="36dp"
-            android:layout_weight="1"
-            android:text="四"
-            android:textSize="24sp"
-            android:gravity="center"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="36dp"
-            android:layout_weight="1"
-            android:text="五"
-            android:textSize="24sp"
-            android:gravity="center"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="36dp"
-            android:layout_weight="1"
-            android:text="六"
-            android:textSize="24sp"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:textColor="#2196F3" />
-    </LinearLayout>
-
-<!--    &lt;!&ndash; 日历主体 &ndash;&gt;-->
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/calendarRecyclerView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="8dp"-->
-<!--        />-->
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/calendarViewPager"
-        android:layout_width="match_parent"
-        android:layout_height="330dp"
-        android:layout_marginTop="8dp"/>
-    <!-- 统计模块开始 -->
-    <LinearLayout
-        android:id="@+id/statContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_marginTop="12dp"
-        android:padding="12dp">
+        android:padding="8dp"
+        android:id="@+id/test">
 
-        <!-- 本月统计 -->
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:orientation="vertical"-->
-<!--            android:background="@drawable/bg_stat_card"-->
-<!--            android:padding="12dp">-->
-
-<!--            <TextView-->
-<!--                android:text="📅 本月统计"-->
-<!--                android:textStyle="bold"-->
-<!--                android:textSize="18sp"-->
-<!--                android:layout_height="20sp"-->
-<!--                android:layout_width="wrap_content"/>-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/myMonthText"-->
-<!--                android:layout_height="20sp"-->
-<!--                android:layout_width="wrap_content"/>-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/relatedMonthText"-->
-<!--                android:layout_height="20sp"-->
-<!--                android:layout_width="wrap_content"/>-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/togetherMonthText"-->
-<!--                android:layout_height="20sp"-->
-<!--                android:layout_width="wrap_content"/>-->
-<!--        </LinearLayout>-->
-
-
-        <!-- 本年度统计 -->
+        <!-- 星期头部 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/bg_stat_card"
-            android:padding="12dp">
+            android:orientation="horizontal"
+            android:weightSum="7">
 
             <TextView
-                android:text="📆 本年度统计"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+
+                android:gravity="center"
                 android:textStyle="bold"
-                android:textSize="18sp"
-                android:layout_height="20sp"
-                android:layout_width="wrap_content"/>
-
-            <TextView
-                android:id="@+id/myYearText"
-                android:layout_height="20sp"
-                android:layout_width="wrap_content"/>
-
-            <TextView
-                android:id="@+id/relatedYearText"
-                android:layout_height="20sp"
-                android:layout_width="wrap_content"/>
-
-            <TextView
-                android:id="@+id/togetherYearText"
-                android:layout_height="20sp"
-                android:layout_width="wrap_content"/>
+                android:textColor="#FF0000" />
         </LinearLayout>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:orientation="horizontal"
+            android:weightSum="7">
+
+            <!-- 登录后显示 -->
+            <TextView
+                android:id="@+id/welcome"
+                android:layout_width="wrap_content"
+                android:layout_height="42dp"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_alignParentEnd="true"
+                android:visibility="gone" />
+
+            <!-- 未登录时显示 -->
+            <ImageView
+                android:id="@+id/unlogin"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/unlogin"
+                android:visibility="gone" />
+        </RelativeLayout>
+        <RelativeLayout android:id="@+id/mouthHeader"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:orientation="horizontal"
+            android:weightSum="7">
+
+            <TextView
+                android:id="@+id/yearAndMouthText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:layout_alignParentStart="true"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
+        </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/weekHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="7">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:text="日"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:textColor="#FF0000" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:text="一"
+                android:textSize="24sp"
+                android:gravity="center"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:text="二"
+                android:textSize="24sp"
+                android:gravity="center"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:text="三"
+                android:textSize="24sp"
+                android:gravity="center"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:text="四"
+                android:textSize="24sp"
+                android:gravity="center"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:text="五"
+                android:textSize="24sp"
+                android:gravity="center"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:text="六"
+                android:textSize="24sp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="#2196F3" />
+        </LinearLayout>
+
+    <!--    &lt;!&ndash; 日历主体 &ndash;&gt;-->
+    <!--    <androidx.recyclerview.widget.RecyclerView-->
+    <!--        android:id="@+id/calendarRecyclerView"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="8dp"-->
+    <!--        />-->
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/calendarViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="330dp"
+            android:layout_marginTop="8dp"/>
+        <!-- 统计模块开始 -->
+        <LinearLayout
+            android:id="@+id/statContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="12dp"
+            android:padding="12dp">
+
+            <!-- 本月统计 -->
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:orientation="vertical"-->
+    <!--            android:background="@drawable/bg_stat_card"-->
+    <!--            android:padding="12dp">-->
+
+    <!--            <TextView-->
+    <!--                android:text="📅 本月统计"-->
+    <!--                android:textStyle="bold"-->
+    <!--                android:textSize="18sp"-->
+    <!--                android:layout_height="20sp"-->
+    <!--                android:layout_width="wrap_content"/>-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/myMonthText"-->
+    <!--                android:layout_height="20sp"-->
+    <!--                android:layout_width="wrap_content"/>-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/relatedMonthText"-->
+    <!--                android:layout_height="20sp"-->
+    <!--                android:layout_width="wrap_content"/>-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/togetherMonthText"-->
+    <!--                android:layout_height="20sp"-->
+    <!--                android:layout_width="wrap_content"/>-->
+    <!--        </LinearLayout>-->
+
+
+
+            <!-- 本年度统计 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_stat_card"
+                android:padding="12dp">
+
+                <TextView
+                    android:text="📆 统计"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:layout_height="20sp"
+                    android:layout_width="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/myYearText"
+                    android:layout_height="20sp"
+                    android:layout_width="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/relatedYearText"
+                    android:layout_height="20sp"
+                    android:layout_width="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/togetherYearText"
+                    android:layout_height="20sp"
+                    android:layout_width="wrap_content"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    <!--    &lt;!&ndash; 月度趋势列表 &ndash;&gt;-->
+    <!--    <androidx.recyclerview.widget.RecyclerView-->
+    <!--        android:id="@+id/monthStatRecyclerView"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="10dp"/>-->
+
+        <!-- 显示选中日期的记录 -->
+        <TextView
+            android:id="@+id/selectedDateRecord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:layout_marginTop="2dp"
+            android:gravity="start"
+            android:lineSpacingExtra="6dp"
+            android:padding="16dp"/>
     </LinearLayout>
-
-<!--    &lt;!&ndash; 月度趋势列表 &ndash;&gt;-->
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/monthStatRecyclerView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="10dp"/>-->
-
-</LinearLayout>
+</android.widget.ScrollView>

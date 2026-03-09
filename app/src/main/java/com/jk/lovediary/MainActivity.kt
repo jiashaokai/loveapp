@@ -135,9 +135,9 @@ class MainActivity : FragmentActivity() {
                 val vo = response.data
 
 //                // ===== 本月 =====
-//                val myMonth = vo.myMonthTotal
-//                val relatedMonth = vo.relatedMonthTotal
-//                val togetherMonth = vo.togetherMonthTotal
+                val myMonth = vo.myMonthTotal
+                val relatedMonth = vo.relatedMonthTotal
+                val togetherMonth = vo.togetherMonthTotal
 //
 //                findViewById<TextView>(R.id.myMonthText).text =
 //                    "本人本月打卡  $myMonth 天"
@@ -155,13 +155,13 @@ class MainActivity : FragmentActivity() {
                 val togetherYear = vo.togetherYearTotal
 
                 findViewById<TextView>(R.id.myYearText).text =
-                    "本人年度打卡  $myYear 天"
+                    "本人年度打卡  $myYear 天  本月打卡  $myMonth 天"
 
                 findViewById<TextView>(R.id.relatedYearText).text =
-                    "对方年度打卡  $relatedYear 天"
+                    "对方年度打卡  $relatedYear 天 本月打卡  $relatedMonth 天"
 
                 findViewById<TextView>(R.id.togetherYearText).text =
-                    "💕 年度共同  $togetherYear 天"
+                    "💕 年度共同  $togetherYear 天 本月共同  $togetherMonth 天"
 
 
 //                var monthStatRecyclerView = findViewById<RecyclerView>(R.id.monthStatRecyclerView)

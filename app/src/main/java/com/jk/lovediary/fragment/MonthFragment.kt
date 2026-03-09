@@ -3,6 +3,7 @@ package com.jk.lovediary.fragment
 import android.app.AlertDialog
 import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,7 @@ import com.jk.lovediary.R
 import com.jk.lovediary.adapter.MyAdapter
 import com.jk.lovediary.data.CheckInStore
 import com.jk.lovediary.model.CalendarDay
+import com.jk.lovediary.model.NoteVO
 import com.jk.lovediary.model.param.NoteParam
 import com.jk.lovediary.model.response.HttpResponse
 import com.jk.lovediary.utils.RetrofitClient
@@ -56,7 +58,7 @@ class MonthFragment : Fragment()  {
 
         adapter = MyAdapter (
             onDayClick = { day ->
-                showCheckInDialog(day)
+                showNote(day)
             },
             onDayLongClick = { day ->
                 showNoteDialog(day)
@@ -189,6 +191,56 @@ class MonthFragment : Fragment()  {
                 }
             }
             .show()
+    }
+
+    private fun showNote(day: CalendarDay) {
+
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd") // 定义格式
+        val formattedDate = day.date.format(formatter) // 格式化当前日期
+
+        val call = RetrofitClient.instance.getNote(formattedDate);
+        call.enqueue(object : Callback<HttpResponse<NoteVO>> {
+            override fun onResponse(call: Call<HttpResponse<NoteVO>>, response: Response<HttpResponse<NoteVO>>) {
+                if (response.isSuccessful) {
+                    // 请求成功，处理响应数据
+                    val noteResponse = response.body()
+                    if (noteResponse != null) {
+                        val myNote = noteResponse.data.myNote ?: "无记录"  // 如果 myNote 为 null，则显示 "无记录"
+                        val relatedUserNotes = noteResponse.data.relatedUserNotes ?: "无记录"  // 如果 relatedUserNotes 为 null，则显示 "无记录"
+
+                        // 更新 UI，显示记录
+//                        val displayText = """
+//    <b>📅 时间:</b> <font color='#2196F3'>$formattedDate</font><br>
+//    <b>📝 我的记录:</b><br>
+//    <i>$myNote</i><br><br>
+//    <b>🫂 关联用户的记录:</b><br>
+//    <i>$relatedUserNotes</i>
+//""".trimIndent()
+                        val displayText = """
+    📅 时间: $formattedDate
+    -------------------------
+    📝 我的记录:
+    $myNote
+    
+    -------------------------
+    👫 关联用户的记录:
+    $relatedUserNotes
+""".trimIndent()
+
+                        // 假设你有一个 TextView 来显示记录
+                        val selectedDateRecord = activity?.findViewById<TextView>(R.id.selectedDateRecord)
+//                        selectedDateRecord?.text = Html.fromHtml(displayText, Html.FROM_HTML_MODE_LEGACY)
+                        selectedDateRecord?.text = displayText
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "请求服务器失败: ${response.code()}", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<HttpResponse<NoteVO>>, t: Throwable) {
+                Toast.makeText(requireContext(), "请求服务器失败: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     fun check(time: String,day: CalendarDay) {

@@ -1,5 +1,6 @@
 package com.jk.lovediary.service
 
+import com.jk.lovediary.model.NoteVO
 import com.jk.lovediary.model.RecordVO
 import com.jk.lovediary.model.YearStatVO
 import com.jk.lovediary.model.param.LoginParam
@@ -44,4 +45,7 @@ interface ApiService {
 
     @POST("/jk/record/note")
     fun saveNote(@Body param: NoteParam): Call<HttpResponse<Boolean>>
+
+    @GET("/jk/record/note/{time}")
+    fun getNote(@Path("time") time: String): Call<HttpResponse<NoteVO>>
 }
