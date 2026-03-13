@@ -1,6 +1,7 @@
 package com.jk.lovediary.service
 
 import com.jk.lovediary.model.NoteVO
+import com.jk.lovediary.model.RecordTopVO
 import com.jk.lovediary.model.RecordVO
 import com.jk.lovediary.model.YearStatVO
 import com.jk.lovediary.model.param.LoginParam
@@ -48,4 +49,7 @@ interface ApiService {
 
     @GET("/jk/record/note/{time}")
     fun getNote(@Path("time") time: String): Call<HttpResponse<NoteVO>>
+
+    @GET("/jk/record/top/{time}")
+    suspend fun getTop(@Path("time") time: String): HttpResponse<List<RecordTopVO>>
 }

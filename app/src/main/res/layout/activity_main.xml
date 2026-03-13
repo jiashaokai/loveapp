@@ -248,5 +248,84 @@
             android:gravity="start"
             android:lineSpacingExtra="6dp"
             android:padding="16dp"/>
+
+
+        <LinearLayout
+            android:id="@+id/rankContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_stat_card"
+            android:padding="12dp">
+
+            <!-- 标题 -->
+            <TextView
+                android:text="🏆 排行榜"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <!-- 年 / 月切换 -->
+            <RadioGroup
+                android:id="@+id/rankTypeGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+
+                <RadioButton
+                    android:id="@+id/monthRankBtn"
+                    android:text="月排行"
+                    android:checked="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <RadioButton
+                    android:id="@+id/yearRankBtn"
+                    android:text="年排行"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RadioGroup>
+
+            <!-- 年月切换 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/prevBtn"
+                    android:src="@drawable/ic_left"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"/>
+
+                <TextView
+                    android:id="@+id/rankDateText"
+                    android:text="2025年03月"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageView
+                    android:id="@+id/nextBtn"
+                    android:src="@drawable/ic_right"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"/>
+
+            </LinearLayout>
+
+            <!-- 排行榜列表 -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rankRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
     </LinearLayout>
 </android.widget.ScrollView>

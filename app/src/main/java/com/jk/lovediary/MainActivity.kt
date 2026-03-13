@@ -1,49 +1,45 @@
 package com.jk.lovediary
 
 //import com.jk.lovediary.ui.theme.CalendarAdapter
+
+
 import CalendarPagerAdapter
-import MonthStatAdapter
-import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
+import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.jk.lovediary.activity.LoginActivity
-import com.jk.lovediary.activity.YearActivity
-
-
-import com.jk.lovediary.adapter.MyAdapter
-import com.jk.lovediary.data.CheckInStore
-import com.jk.lovediary.model.CalendarDay
+import com.jk.lovediary.adapter.RankAdapter
 import com.jk.lovediary.model.response.HttpResponse
 import com.jk.lovediary.utils.RetrofitClient
-import com.jk.lovediary.utils.generateCalendarDays
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.time.LocalDate
 import java.time.YearMonth
-import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
 
 class MainActivity : FragmentActivity() {
+
+    private var currentYear = 2025
+    private var currentMonth = 3
+    private var isMonthRank = true
+
     //登录
     private var loginUserName: String? = null
 
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +47,9 @@ class MainActivity : FragmentActivity() {
 
         //初始化请求
         RetrofitClient.init(applicationContext)
+
+        currentYear = LocalDate.now().year
+        currentMonth = LocalDate.now().monthValue
 
         // 恢复登录状态
         val unloginIcon = findViewById<ImageView>(R.id.unlogin)
@@ -98,6 +97,103 @@ class MainActivity : FragmentActivity() {
 
 
         updateCheckInCounts()
+
+        recyclerView = findViewById(R.id.rankRecyclerView)
+
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        val group  = findViewById<RadioGroup>(R.id.rankTypeGroup)
+
+        group.setOnCheckedChangeListener { _, checkedId ->
+
+            if (checkedId == R.id.monthRankBtn) {
+
+                // 月排行
+                isMonthRank = true
+                updateDateText()
+                loadRankData()
+            } else if (checkedId == R.id.yearRankBtn) {
+
+                // 年排行
+                isMonthRank = false
+                updateDateText()
+                loadRankData()
+
+            }
+        }
+
+        findViewById<ImageView>(R.id.prevBtn).setOnClickListener {
+
+            if (isMonthRank) {
+
+                currentMonth--
+
+                if (currentMonth < 1) {
+                    currentMonth = 12
+                    currentYear--
+                }
+
+            } else {
+                currentYear--
+            }
+
+            updateDateText()
+            loadRankData()
+        }
+
+        findViewById<ImageView>(R.id.nextBtn).setOnClickListener {
+
+            if (isMonthRank) {
+
+                currentMonth++
+
+                if (currentMonth > 12) {
+                    currentMonth = 1
+                    currentYear++
+                }
+
+            } else {
+                currentYear++
+            }
+
+            updateDateText()
+            loadRankData()
+        }
+
+        updateDateText()
+        loadRankData()
+    }
+
+    private fun updateDateText() {
+        val rankDateText = findViewById<TextView>(R.id.rankDateText)
+        if (isMonthRank) {
+            rankDateText.text = "${currentYear}年${currentMonth}月"
+        } else {
+            rankDateText.text = "${currentYear}年"
+        }
+    }
+
+    private fun loadRankData() {
+        lifecycleScope.launch {
+            var time: String
+            if (isMonthRank) {
+                time = String.format("%d-%02d", currentYear, currentMonth)
+            } else {
+                time = currentYear.toString()
+            }
+
+            try {
+                val response = RetrofitClient.instance.getTop(time);
+
+                val recordList = response.data
+
+
+                recyclerView.adapter = RankAdapter(recordList)
+            }catch (e: Exception) {
+                Log.e("网络异常", e.toString())
+                // 这里防止崩溃
+            }
+        }
     }
 
 //    private fun updateCheckInCountsByMonth(yearMonth: YearMonth) {

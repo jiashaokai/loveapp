@@ -124,6 +124,32 @@ class MonthFragment : Fragment()  {
         val editText = view.findViewById<EditText>(R.id.noteEdit)
         val dateText = view.findViewById<TextView>(R.id.dialogDate)
 
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd") // 定义格式
+        val formattedDate = day.date.format(formatter) // 格式化当前日期
+
+        val call = RetrofitClient.instance.getNote(formattedDate);
+        call.enqueue(object : Callback<HttpResponse<NoteVO>> {
+            override fun onResponse(call: Call<HttpResponse<NoteVO>>, response: Response<HttpResponse<NoteVO>>) {
+                if (response.isSuccessful) {
+                    // 请求成功，处理响应数据
+                    val noteResponse = response.body()
+                    if (noteResponse != null) {
+                        val myNote = noteResponse.data.myNote // 如果 myNote 为 null，则显示 "无记录"
+
+                        if (!myNote.isEmpty()){
+                            editText.setText(myNote)
+                        }
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "请求服务器失败: ${response.code()}", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<HttpResponse<NoteVO>>, t: Throwable) {
+                Toast.makeText(requireContext(), "请求服务器失败: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+
         dateText.text = day.date.toString()
 
         AlertDialog.Builder(requireContext())

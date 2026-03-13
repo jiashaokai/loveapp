@@ -57,7 +57,7 @@ class MyAdapter (
         private val lunarText = view.findViewById<TextView>(R.id.lunarTextHidden)
         private val dayOverall = view.findViewById<LinearLayout>(R.id.dayOverall)
 
-        private val isBoy = true
+        private val isBoy = false
 
 
         val festivalUtils = FestivalUtils()
